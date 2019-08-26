@@ -1,12 +1,17 @@
 import libtmux
 from pyfiglet import Figlet
-#  from colorama import Fore, Style
-from PyInquirer import prompt, style_from_dict, Token
+from colorama import Fore, Style
+from PyInquirer import prompt, style_from_dict, Token, \
+                        Validator, ValidationError
 
 
 ############
 # Prettify #
 ############
+
+def print_green(text):
+    print(Fore.GREEN + text + Style.RESET_ALL)
+
 
 def splash(text, font):
     """Print splash screen text."""
@@ -14,7 +19,7 @@ def splash(text, font):
     # TODO: Add pretty colors
     fig = Figlet(font=font)
     text = fig.renderText(text)
-    print(text.replace("\n", "\n\t"))
+    print_green(text.replace("\n", "\n\t"))
 
 
 ########
@@ -30,20 +35,34 @@ def attach_to_session(server, name):
     session.attach_session()
 
 
+def create_new_named_session(server, name):
+    session = server.new_session(name)
+    session.attach_session()
+
+
 #############
 # Prompting #
 #############
 
-prepend = {
+MARK = {
     "tmux-session": "    ",
     "non-tmux-session": "- ",
 }
 
-actions = {
+ACTIONS = {
     "zsh": "Launch zsh",
     "new-tmux-session": "Create new tmux session",
     "attach-tmux-session": "Attach to existing tmux session",
 }
+
+SELECTOR_STYLE = style_from_dict({
+        Token.QuestionMARK: '#dcbf85 bold',
+        Token.Question: '#1776A5 bold',
+        Token.Instruction: '#1776A5 bold',
+        Token.Pointer: '#FF9D00 bold',
+        Token.Selected: '#cc5454',
+        Token.Answer: '#f44336 bold',
+})
 
 
 def prompt_for_action(tmux_sessions) -> str:
@@ -53,15 +72,15 @@ def prompt_for_action(tmux_sessions) -> str:
     non-tmux-session session.
     """
     choices = [
-        prepend["non-tmux-session"] + actions["zsh"],
-        prepend["non-tmux-session"] + actions["new-tmux-session"],
+        MARK["non-tmux-session"] + ACTIONS["zsh"],
+        MARK["non-tmux-session"] + ACTIONS["new-tmux-session"],
         {
-             'name': actions["attach-tmux-session"],
-             'disabled': 'Select from below'
+            'name': ACTIONS["attach-tmux-session"],
+            'disabled': 'Select from below'
         }
     ]
 
-    choices += [prepend["tmux-session"] + session for session in tmux_sessions]
+    choices += [MARK["tmux-session"] + session for session in tmux_sessions]
 
     questions = [
         {
@@ -74,17 +93,42 @@ def prompt_for_action(tmux_sessions) -> str:
 
     # TODO: Finalize default colors
     # TODO: Make colors configurable. Maybe add color themes?
-    answers = prompt(questions, style=style_from_dict({
-        Token.QuestionMark: '#dcbf85 bold',
-        Token.Question: '#1776A5 bold',
-        Token.Instruction: '#1776A5 bold',
-        Token.Pointer: '#FF9D00 bold',
-        Token.Selected: '#cc5454',
-        Token.Answer: '#f44336 bold',
-    }))
+    answers = prompt(questions, style=SELECTOR_STYLE)
 
     print(answers["action"])
     return answers["action"]
+
+
+class TmuxSessionValidator(Validator):
+    """
+    Tmux sesion names must not contain periods and must not be the empty
+    string.
+    """
+    def validate(self, document):
+        name = document.text
+        if len(name) == 0:
+            raise ValidationError(
+                message="tmux session name must not be an empty string",
+                cursor_position=0)
+        elif "." in name:
+            raise ValidationError(
+                message="tmux session names may not contain '.'",
+                cursor_position=len(name))  # Move cursor to end
+
+
+def prompt_for_session_name() -> str:
+    questions = [
+        {
+            'type': 'input',
+            'name': 'session_name',
+            'message': 'Enter a session name',
+            'default': "",
+            'validate': TmuxSessionValidator
+        },
+    ]
+
+    answers = prompt(questions, style=SELECTOR_STYLE)
+    return answers["session_name"]
 
 
 ##################
@@ -93,13 +137,14 @@ def prompt_for_action(tmux_sessions) -> str:
 
 def action_handler(server, action):
     # Attach to session
-    if action.startswith(prepend["tmux-session"]):
+    print("ACTION:", action)
+    if action.startswith(MARK["tmux-session"]):
         attach_to_session(server, action.strip())
-    # TODO: Create new session
-    elif action == actions["new-tmux-session"]:
-        # TODO: Prompt for name of new session
-        # TODO: create_new_session()
-        pass
+    # Create new session
+    elif ACTIONS["new-tmux-session"] in action:
+        session_name = prompt_for_session_name()
+        print("Session name:", session_name)
+        create_new_named_session(server, session_name)
     # Launch zsh
     else:
         return
@@ -110,7 +155,7 @@ def main():
     # TODO: What happens if no server is running?
     server = libtmux.Server()
     tmux_sessions = get_tmux_session_names(server)
-    print("TMUX Sessions:", tmux_sessions)
+    #  print("TMUX Sessions:", tmux_sessions)
     action = prompt_for_action(tmux_sessions)
     action_handler(server, action)
 
