@@ -1,5 +1,5 @@
 # Standard Library Imports
-import os
+from os import system, getenv
 from time import sleep
 
 # 3rd Party Library Imports
@@ -31,13 +31,15 @@ def print_green(text):
     print(Fore.GREEN + Style.BRIGHT + text + Style.RESET_ALL)
 
 
-def splash(text, font):
-    """Print splash screen text."""
-    # TODO: Add splash screen config option in .zshrc
-    # TODO: Add pretty colors
+def splash():
+    """Print splash screen text. Uses env vars for font and header if they
+    exist."""
+    # TODO: Add pretty colors. lolcat?
+    font = getenv("ZSH_STARTIFY_HEADER_FONT", "univers")
+    text = getenv("ZSH_STARTIFY_HEADER_TEXT", "zsh")
     fig = Figlet(font=font)
-    text = fig.renderText(text).replace("\n", "\n\t")
-    print_green(text)
+    formatted = "\t" + fig.renderText(text).replace("\n", "\n\t")
+    print_green(formatted)
 
 
 def sleep_with_spinner(secs):
@@ -92,7 +94,7 @@ def get_tmux_server() -> libtmux.Server:
         hack_session = "zsh-startify-tmux-server-hack"
         start_server_hack = f"tmux has-session -t {hack_session} || \
                               tmux new-session -d -s {hack_session}"
-        os.system(start_server_hack)
+        system(start_server_hack)
         # Sleep to give tmux some time to restore sessions if tmux-resurrect or
         # tmux-continuum is used
         # TODO: Make this sleep value configurable in .zshrc
@@ -108,6 +110,7 @@ def get_tmux_server() -> libtmux.Server:
 # Prompting #
 #############
 
+# These get prepended to the actions in the list for selection.
 MARK = {
     "tmux-session": "    ",
     "non-tmux-session": "- ",
@@ -220,7 +223,7 @@ def action_handler(server, action):
 
 
 def main():
-    splash("zsh", "univers")
+    splash()
     server = get_tmux_server()
     tmux_sessions = get_tmux_session_names(server)
     action = prompt_for_action(tmux_sessions)
