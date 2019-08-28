@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# zsh-startify <https://github.com/alichtman/zsh-startify>
+
 # Standard Library Imports
 from os import system, getenv
 from time import sleep

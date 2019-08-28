@@ -2,7 +2,25 @@
 
 **TODO: Insert demo.**
 
-This is a start screen for zsh. After starting a terminal session, it will load `tmux` and show you sessions you can attach to. It will also give you the option to create a new named sesion, as well as launch a regular `zsh` session.
+This is a fancy start screen for zsh. After starting a terminal session, it will:
+
++ Start a `tmux` server if it's not already running
++ Allow you to easily attach to any `tmux` sessions
++ Allow you to easily create new tmux sessions
++ Allow you to quickly launch a `zsh` session, by `Ctrl-C`'ing or `Ctrl-D`'ing out of the prompt.
+
+## Installation
+
+Until this is published on pypi, the best installation method is:
+
+```bash
+$ git clone git@github.com:alichtman/zsh-startify.git && cd zsh-startify
+$ chmod +x zsh_startify.py
+$ mv zsh_startify.py /usr/local/bin/
+$ echo "zsh_startify.py >> ~/.zshrc"
+```
+
+Note: This tool depends on Python 3.6
 
 ## Configuration
 
