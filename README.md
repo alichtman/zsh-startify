@@ -20,7 +20,12 @@ $ mv zsh_startify.py /usr/local/bin/
 $ echo "zsh_startify.py >> ~/.zshrc"
 ```
 
-Note: This tool depends on Python 3.6
+Note: This tool depends on `Python 3.6+`. You can check what version you have with:
+
+```bash
+$ python3 --version
+Python 3.7.4
+```
 
 ## Configuration
 
