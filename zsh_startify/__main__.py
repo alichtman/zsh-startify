@@ -4,6 +4,7 @@
 # Standard Library Imports
 from os import system, getenv
 from time import sleep
+from shlex import quote
 
 # 3rd Party Library Imports
 import libtmux
@@ -42,7 +43,13 @@ def splash():
     text = getenv("ZSH_STARTIFY_HEADER_TEXT", "zsh")
     fig = Figlet(font=font)
     formatted = "\t" + fig.renderText(text).replace("\n", "\n\t")
-    print_green(formatted)
+
+    # TODO: Python lolcat would be more efficient, but don't care for now.
+    rainbow = True
+    if rainbow:
+        system("echo " + quote(formatted) + " | lolcat")
+    else:
+        print_green(formatted)
 
 
 def sleep_with_spinner(secs):
@@ -107,6 +114,11 @@ def get_tmux_server() -> libtmux.Server:
         get_tmux_session(server, hack_session).kill_session()
 
     return server
+
+
+def is_inside_tmux_session() -> bool:
+    """Returns True if already attached to a tmux session, False otherwise"""
+    return getenv("TMUX", "") != ""
 
 
 #############
@@ -226,6 +238,9 @@ def action_handler(server, action):
 
 
 def main():
+    if is_inside_tmux_session():
+        return
+
     splash()
     server = get_tmux_server()
     tmux_sessions = get_tmux_session_names(server)
