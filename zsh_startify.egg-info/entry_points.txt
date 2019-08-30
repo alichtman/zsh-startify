@@ -1,3 +1,0 @@
-[console_scripts]
-zsh-startify=zsh_startify.__main__:main
-
