@@ -11,11 +11,11 @@ This is a fancy start screen for zsh. After starting a terminal session, it will
 
 ## Installation
 
-The recommended installation method is through PyPi:
+The recommended installation method is through `PyPi`:
 
 ```bash
 $ pip3 install zsh-startify
-$ echo "zsh-startify >> ~/.zshrc"
+$ echo "zsh-startify" >> ~/.zshrc
 ```
 
 But, if you'd like to install it manually:
@@ -23,7 +23,7 @@ But, if you'd like to install it manually:
 ```bash
 $ git clone git@github.com:alichtman/zsh-startify.git && cd zsh-startify
 $ python3 setup.py install
-$ echo "zsh-startify >> ~/.zshrc"
+$ echo "zsh-startify" >> ~/.zshrc
 ```
 
 Note: This tool depends on `Python 3.6+`. You can check what version you have with:
