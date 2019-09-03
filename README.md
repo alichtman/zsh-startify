@@ -1,6 +1,9 @@
 # zsh-startify
 
-**TODO: Insert demo.**
+<h1 align="center">
+  <img src="img/demo.png" width="80%" />
+  <br />
+</h1>
 
 This is a fancy start screen for zsh. After starting a terminal session, it will:
 
@@ -50,6 +53,13 @@ A simple example of this is:
 export ZSH_STARTIFY_HEADER_TEXT="custom-header"
 export ZSH_STARTIFY_HEADER_FONT="slant"
 ```
+
+## `tmux`Integration
+
+This works best when used with these two `tmux` plugins:
+
+- [`tmux-resurrect`](https://github.com/tmux-plugins/tmux-resurrect)
+- [`tmux-continuum`](https://github.com/tmux-plugins/tmux-continuum)
 
 ## Inspiration
 
