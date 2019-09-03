@@ -1,7 +1,7 @@
 # zsh-startify
 
 <h1 align="center">
-  <img src="img/demo.png" width="80%" />
+  <img src="img/demo.png" width="60%" />
   <br />
 </h1>
 
