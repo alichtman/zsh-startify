@@ -46,12 +46,16 @@ This tool comes with sensible defaults. No configuration is necessary, however, 
 - **ZSH_STARTIFY_HEADER_TEXT**
 	+ This string will be printed as the header.
 	+ Default: `zsh`. Accepts any string.
+- **ZSH_STARTIFY_NO_SPLASH**
+	+ Set this environment variable to not print the splash screen.
+	+ Default: Not set. If set to anything, the splash screen will not be printed.
 
 A simple example of this is:
 
 ```bash
 export ZSH_STARTIFY_HEADER_TEXT="custom-header"
 export ZSH_STARTIFY_HEADER_FONT="slant"
+#export ZSH_STARTIFY_NO_SPLASH=True
 ```
 
 ## `tmux`Integration

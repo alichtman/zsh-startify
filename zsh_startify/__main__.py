@@ -60,6 +60,14 @@ def sleep_with_spinner(secs):
     spinner.succeed("Success.")
 
 
+def pretty_print_session_names(sessions):
+    print_blue("\n   === Active tmux sessions ===")
+    for session in sessions:
+        print_red(f"       [*] {session}")
+
+    print()
+
+
 ########
 # tmux #
 ########
@@ -190,7 +198,7 @@ def prompt_for_action(tmux_sessions) -> str:
 
 class TmuxSessionValidator(Validator):
     """
-    Tmux sesion names must not contain periods and must not be the empty
+    Tmux session names must not contain periods and must not be the empty
     string.
     """
     def validate(self, document):
@@ -238,12 +246,17 @@ def action_handler(server, action):
 
 
 def main():
+    # If we're running in a tmux session, abort.
     if is_inside_tmux_session():
         return
 
-    splash()
+    if not getenv("ZSH_STARTIFY_NO_SPLASH", ""):
+        splash()
     server = get_tmux_server()
     tmux_sessions = get_tmux_session_names(server)
+    # Print all session names so that if the user wants to keymash enter
+    # to get a shell, they can still see what sessions are there.
+    pretty_print_session_names(tmux_sessions)
     action = prompt_for_action(tmux_sessions)
     action_handler(server, action)
 
