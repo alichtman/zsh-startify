@@ -1,11 +1,18 @@
 # zsh-startify
 
 <h1 align="center">
-  <img src="img/demo.png" width="60%" />
+  <img src="img/demo.png" width="55%" />
   <br />
 </h1>
 
-This is a fancy start screen for zsh. After starting a terminal session, it will:
+You can also use it in a more minimal configuration, like this:
+
+<h1 align="center">
+  <img src="img/minimal.png" width="55%" />
+  <br />
+</h1>
+
+This is a fancy start screen for `zsh`. After starting a terminal session, it will:
 
 + Start a `tmux` server if it's not already running
 + Allow you to easily attach to any `tmux` sessions
@@ -49,13 +56,22 @@ This tool comes with sensible defaults. No configuration is necessary, however, 
 - **ZSH_STARTIFY_NO_SPLASH**
 	+ Set this environment variable to not print the splash screen.
 	+ Default: Not set. If set to anything, the splash screen will not be printed.
+- **ZSH_STARTIFY_NON_INTERACTIVE**
+	+ Set this environment variable to not display the action picking menu.
+	+ Default: Not set. If set to anything, the interactive menu will not be displayed.
 
-A simple example of this is:
+An example of this could be:
 
 ```bash
 export ZSH_STARTIFY_HEADER_TEXT="custom-header"
 export ZSH_STARTIFY_HEADER_FONT="slant"
-#export ZSH_STARTIFY_NO_SPLASH=True
+```
+
+My configuration is:
+
+```bash
+export ZSH_STARTIFY_NO_SPLASH=true
+export ZSH_STARTIFY_NON_INTERACTIVE=true
 ```
 
 ## `tmux`Integration
@@ -67,4 +83,4 @@ This works best when used with these two `tmux` plugins:
 
 ## Inspiration
 
-I've used [vim-startify](https://github.com/mhinz/vim-startify) pretty much every day for the past year. I figured it was time for `zsh` and `tmux` to have a similar tool.
+I've used [vim-startify](https://github.com/mhinz/vim-startify) a lot. I figured it was time for `zsh` and `tmux` to have a similar tool.

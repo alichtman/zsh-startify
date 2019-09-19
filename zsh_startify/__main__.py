@@ -38,7 +38,6 @@ def print_green(text):
 def splash():
     """Print splash screen text. Uses env vars for font and header if they
     exist."""
-    # TODO: Add pretty colors. lolcat?
     font = getenv("ZSH_STARTIFY_HEADER_FONT", "univers")
     text = getenv("ZSH_STARTIFY_HEADER_TEXT", "zsh")
     fig = Figlet(font=font)
@@ -60,8 +59,11 @@ def sleep_with_spinner(secs):
     spinner.succeed("Success.")
 
 
-def pretty_print_session_names(sessions):
-    print_blue("\n   === Active tmux sessions ===")
+def pretty_print_session_names(sessions, splash_flag):
+    if not splash_flag:
+        print("\n")
+
+    print_blue("    === Active tmux sessions ===")
     for session in sessions:
         print_red(f"       [*] {session}")
 
@@ -201,6 +203,7 @@ class TmuxSessionValidator(Validator):
     Tmux session names must not contain periods and must not be the empty
     string.
     """
+
     def validate(self, document):
         name = document.text
         if len(name) == 0:
@@ -250,15 +253,21 @@ def main():
     if is_inside_tmux_session():
         return
 
-    if not getenv("ZSH_STARTIFY_NO_SPLASH", ""):
+    # Print splash screen if desired
+    splash_flag = not getenv("ZSH_STARTIFY_NO_SPLASH", "")
+    if splash_flag:
         splash()
+
     server = get_tmux_server()
     tmux_sessions = get_tmux_session_names(server)
     # Print all session names so that if the user wants to keymash enter
     # to get a shell, they can still see what sessions are there.
-    pretty_print_session_names(tmux_sessions)
-    action = prompt_for_action(tmux_sessions)
-    action_handler(server, action)
+    pretty_print_session_names(tmux_sessions, splash_flag)
+
+    # Set up interactive session picker if desired
+    if not getenv("ZSH_STARTIFY_NON_INTERACTIVE", ""):
+        action = prompt_for_action(tmux_sessions)
+        action_handler(server, action)
 
 
 if __name__ == "__main__":
