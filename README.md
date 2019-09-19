@@ -2,15 +2,15 @@
 
 <h1 align="center">
   <img src="img/demo.png" width="55%" />
-  <br />
 </h1>
 
 You can also use it in a more minimal configuration, like this:
 
 <h1 align="center">
   <img src="img/minimal.png" width="55%" />
-  <br />
 </h1>
+
+---
 
 This is a fancy start screen for `zsh`. After starting a terminal session, it will:
 
