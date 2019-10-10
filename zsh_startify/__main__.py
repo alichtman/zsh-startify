@@ -5,6 +5,7 @@
 from os import system, getenv
 from time import sleep
 from shlex import quote
+import sys
 
 # 3rd Party Library Imports
 import libtmux
@@ -257,8 +258,10 @@ def main():
     splash_flag = not getenv("ZSH_STARTIFY_NO_SPLASH", "")
     if splash_flag:
         splash()
-
-    server = get_tmux_server()
+    try:
+        server = get_tmux_server()
+    except KeyboardInterrupt:
+        sys.exit()
     tmux_sessions = get_tmux_session_names(server)
     # Print all session names so that if the user wants to keymash enter
     # to get a shell, they can still see what sessions are there.
