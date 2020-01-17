@@ -67,14 +67,18 @@ export ZSH_STARTIFY_HEADER_TEXT="custom-header"
 export ZSH_STARTIFY_HEADER_FONT="slant"
 ```
 
-My configuration is:
+### Minimal Configuration
+
+I found myself using this minimal configuration often:
 
 ```bash
 export ZSH_STARTIFY_NO_SPLASH=true
 export ZSH_STARTIFY_NON_INTERACTIVE=true
 ```
 
-## `tmux`Integration
+I put this in my `.zshrc`, and found that `Python` was too slow to be running every time I opened a new shell. I rewrote it in `bash` for performance benefits of around half a second. You can find the script here: [`tls.sh`](https://github.com/alichtman/scripts/blob/master/tls.sh).
+
+## `tmux` Integration
 
 This works best when used with these two `tmux` plugins:
 
